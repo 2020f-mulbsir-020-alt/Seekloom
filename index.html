@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeekLoom - Weave Knowledge into Insight</title>
+    <style>
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1428 100%);
+            color: #e0e6ff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background gradients */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+            animation: gradientShift 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==================== TYPOGRAPHY ==================== */
+        h1, h2, h3, h4, h5, h6 {
+            letter-spacing: -0.01em;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4.5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #e0e6ff 0%, #a8b4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #c5cef0;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8a2be2 0%, #ff00ff 100%);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5),
+                        inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(138, 43, 226, 0.7),
+                        0 0 30px rgba(255, 0, 255, 0.6),
+                        inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #a8d5ff;
+            border: 2px solid #a8d5ff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(168, 213, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-secondary:hover {
+            color: #00ffff;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .btn-secondary:hover::before {
+            left: 100%;
+        }
+
+        /* ==================== CONTAINER & LAYOUT ==================== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-dark {
+            background: rgba(10, 14, 39, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.25) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: float 10s ease-in-out infinite reverse;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero h1 {
+            background: linear-gradient(135deg, #fff 0%, #a8d5ff 50%, #00ffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            animation: shimmer 8s ease-in-out infinite;
+        }
+
+        .hero-subheading {
+            font-size: 1.3rem;
+            color: #a8cef0;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                background-position: -1000px 0;
+            }
+            50% {
+                background-position: 1000px 0;
+            }
+        }
+
+        /* ==================== CORE CONCEPT SECTION ==================== */
+        .concept {
+            padding: 5rem 2rem;
+            position: relative;
+        }
+
+        .concept-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .concept-flow::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(138, 43, 226, 0.5) 20%,
+                rgba(0, 255, 255, 0.5) 50%,
+                rgba(138, 43, 226, 0.5) 80%,
+                transparent 100%);
+            z-index: 0;
+        }
+
+        .flow-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            animation: slideUp 0.8s ease-out both;
+        }
+
+        .flow-step:nth-child(2) { animation-delay: 0.1s; }
+        .flow-step:nth-child(3) { animation-delay: 0.2s; }
+        .flow-step:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flow-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(0, 255, 255, 0.2));
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .flow-step:hover .flow-icon {
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .flow-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e0e6ff;
+        }
+
+        /* ==================== FEATURES SECTION ==================== */
+        .features {
+            background: rgba(26, 31, 58, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(0, 255, 255, 0.05));
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .feature-card:hover {
+            border-color: #00ffff;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(0, 255, 255, 0.1));
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(138, 43, 226, 0.2),
+                        0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+            animation: pulse 1s ease-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8a2be2, #00ffff);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #e0e6ff;
+        }
+
+        .feature-desc {
+            color: #a8cef0;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ==================== HOW IT WORKS ==================== */
+        .how-it-works {
+            position: relative;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(138, 43, 226, 0.5) 0%,
+                rgba(0, 255, 255, 0.5) 50%,
+                rgba(138, 43, 226, 0.5) 100%);
+            z-index: 0;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            grid-column: 1;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            grid-column: 2;
+        }
+
+        .timeline-number {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8a2be2, #00ffff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
+            z-index: 2;
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(0, 255, 255, 0.05));
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .timeline-content:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #e0e6ff;
+        }
+
+        .timeline-desc {
+            color: #a8cef0;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item .timeline-content {
+                grid-column: 1 !important;
+                margin-left: 100px;
+            }
+
+            .timeline-number {
+                left: 0;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ==================== DISCOVERY VISUAL ==================== */
+        .discovery {
+            background: rgba(26, 31, 58, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .network-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            max-width: 600px;
+            margin: 3rem auto 0;
+            background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            border-radius: 1rem;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            overflow: hidden;
+        }
+
+        .network-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #8a2be2, #00ffff);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+            animation: float-dot 6s ease-in-out infinite;
+        }
+
+        @keyframes float-dot {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(var(--tx), var(--ty)); }
+        }
+
+        .dot-1 { --tx: 20px; --ty: 30px; top: 20%; left: 20%; animation-delay: 0s; }
+        .dot-2 { --tx: -30px; --ty: 25px; top: 30%; right: 20%; animation-delay: 1s; }
+        .dot-3 { --tx: 25px; --ty: -30px; bottom: 25%; left: 30%; animation-delay: 2s; }
+        .dot-4 { --tx: -20px; --ty: -25px; bottom: 30%; right: 25%; animation-delay: 3s; }
+        .dot-5 { --tx: 15px; --ty: -20px; top: 50%; left: 50%; animation-delay: 1.5s; }
+
+        .network-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+            top: 50%;
+            left: 20%;
+            width: 60%;
+            animation: pulse-line 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-line {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .network-line:nth-child(n+6) {
+            width: 40%;
+            left: auto;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        /* ==================== USE CASES ==================== */
+        .use-cases {
+            position: relative;
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .use-case-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), rgba(138, 43, 226, 0.05));
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            text-align: center;
+        }
+
+        .use-case-card:hover {
+            border-color: #8a2be2;
+            transform: translateY(-6px);
+            box-shadow: 0 15px 40px rgba(138, 43, 226, 0.25);
+        }
+
+        .use-case-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .use-case-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #e0e6ff;
+        }
+
+        .use-case-desc {
+            color: #a8cef0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ==================== PHILOSOPHY SECTION ==================== */
+        .philosophy {
+            background: rgba(26, 31, 58, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .thought-card {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(0, 255, 255, 0.08));
+            border-left: 4px solid #8a2be2;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .thought-card::before {
+            content: '"';
+            position: absolute;
+            font-size: 4rem;
+            font-weight: 700;
+            color: rgba(0, 255, 255, 0.2);
+            top: -10px;
+            right: 10px;
+        }
+
+        .thought-card:hover {
+            transform: translateX(10px);
+            border-left-color: #00ffff;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+        }
+
+        .thought-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #c5cef0;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .thought-author {
+            color: #8a9fb8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ==================== CTA SECTION ==================== */
+        .cta-section {
+            text-align: center;
+            padding: 5rem 2rem;
+            position: relative;
+            border-radius: 2rem;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(0, 255, 255, 0.05));
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            margin: 3rem 2rem;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.2) 0%, transparent 70%);
+            animation: float 8s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-heading {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff, #a8d5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-button {
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+        }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            background: rgba(10, 14, 39, 0.8);
+            border-top: 1px solid rgba(138, 43, 226, 0.2);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h4 {
+            color: #e0e6ff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-column a {
+            display: block;
+            color: #a8cef0;
+            text-decoration: none;
+            margin: 0.5rem 0;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .footer-column a:hover {
+            color: #00ffff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(138, 43, 226, 0.2);
+            padding-top: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8a2be2, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-tagline {
+            color: #a8cef0;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-copyright {
+            color: #6b7a9a;
+            font-size: 0.85rem;
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            .section {
+                padding: 4rem 0;
+            }
+
+            h1 {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+            }
+
+            h2 {
+                font-size: clamp(1.5rem, 4vw, 2.2rem);
+            }
+
+            .hero {
+                min-height: 70vh;
+                padding: 3rem 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .concept-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .concept-flow::before {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .use-cases-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .philosophy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .network-container {
+                height: 400px;
+            }
+
+            .cta-section {
+                margin: 2rem 1rem;
+            }
+
+            .cta-heading {
+                font-size: 1.8rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* ==================== ACCESSIBILITY ==================== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            body {
+                background: linear-gradient(135deg, #f5f7ff 0%, #e8ebf5 50%, #f0f3ff 100%);
+                color: #1a1f3a;
+            }
+
+            h2 {
+                background: linear-gradient(135deg, #1a1f3a 0%, #4a5580 100%);
+                -webkit-text-fill-color: transparent;
+            }
+
+            p {
+                color: #4a5580;
+            }
+
+            .hero-subheading {
+                color: #5a6a8a;
+            }
+
+            .feature-desc, .timeline-desc, .use-case-desc, .thought-text {
+                color: #5a6a8a;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== HERO SECTION ========== -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Weave Knowledge Into Insight</h1>
+            <p class="hero-subheading">
+                Search beyond information. Discover the patterns that connect ideas across disciplines and unlock deeper understanding through AI-powered knowledge mapping.
+            </p>
+            <div class="hero-cta">
+                <button class="btn btn-primary">Start Exploring</button>
+                <button class="btn btn-secondary">Try SeekLoom AI</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CORE CONCEPT ========== -->
+    <section class="section concept">
+        <div class="container">
+            <h2>How SeekLoom Works</h2>
+            <p style="text-align: center; color: #a8cef0; margin-bottom: 3rem;">
+                A journey from curiosity to understanding
+            </p>
+            <div class="concept-flow">
+                <div class="flow-step">
+                    <div class="flow-icon">🔍</div>
+                    <div class="flow-label">Search</div>
+                    <p style="color: #8a9fb8; margin-top: 0.5rem; font-size: 0.9rem;">Ask anything, anywhere</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">🔗</div>
+                    <div class="flow-label">Connect</div>
+                    <p style="color: #8a9fb8; margin-top: 0.5rem; font-size: 0.9rem;">AI finds relationships</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">💡</div>
+                    <div class="flow-label">Understand</div>
+                    <p style="color: #8a9fb8; margin-top: 0.5rem; font-size: 0.9rem;">Context becomes clarity</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">🚀</div>
+                    <div class="flow-label">Evolve</div>
+                    <p style="color: #8a9fb8; margin-top: 0.5rem; font-size: 0.9rem;">Knowledge compounds</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FEATURES SECTION ========== -->
+    <section class="section features">
+        <div class="container">
+            <h2>Intelligent Tools</h2>
+            <p style="text-align: center; color: #a8cef0;">
+                Powered by advanced AI to transform how you discover knowledge
+            </p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">AI Knowledge Mapping</h3>
+                    <p class="feature-desc">
+                        Automatically visualize connections between concepts, creating a living map of your knowledge domain.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Smart Search Engine</h3>
+                    <p class="feature-desc">
+                        Beyond keywords. Understand intent, context, and nuance to deliver truly relevant results.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Context-Based Results</h3>
+                    <p class="feature-desc">
+                        Results adapt to your knowledge level, field, and objectives for maximized relevance.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3 class="feature-title">Insight Clustering</h3>
+                    <p class="feature-desc">
+                        Discover patterns in raw information. Transform scattered data into actionable insights.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS (TIMELINE) ========== -->
+    <section class="section how-it-works">
+        <div class="container">
+            <h2>Your Discovery Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Ask Anything</h3>
+                        <p class="timeline-desc">
+                            Enter your question, topic, or idea. SeekLoom understands natural language and grasps context.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">AI Comprehends</h3>
+                        <p class="timeline-desc">
+                            Advanced language models analyze your query and identify relevant knowledge domains.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Connect Ideas</h3>
+                        <p class="timeline-desc">
+                            The system weaves together information from diverse sources into a coherent knowledge network.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">Receive Insights</h3>
+                        <p class="timeline-desc">
+                            Get answers, visualizations, and connections—not just raw information.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== DISCOVERY VISUAL ========== -->
+    <section class="section discovery">
+        <div class="container">
+            <h2>Knowledge in Motion</h2>
+            <p style="text-align: center; color: #a8cef0; margin-bottom: 2rem;">
+                Watch how ideas connect across your discovery space
+            </p>
+            <div class="network-container">
+                <div class="network-dot dot-1"></div>
+                <div class="network-dot dot-2"></div>
+                <div class="network-dot dot-3"></div>
+                <div class="network-dot dot-4"></div>
+                <div class="network-dot dot-5"></div>
+                <div class="network-line"></div>
+                <div class="network-line"></div>
+                <div class="network-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== USE CASES ========== -->
+    <section class="section use-cases">
+        <div class="container">
+            <h2>Built for Every Pursuit</h2>
+            <p style="text-align: center; color: #a8cef0; margin-bottom: 2rem;">
+                From students to researchers to visionaries
+            </p>
+            <div class="use-cases-grid">
+                <div class="use-case-card">
+                    <div class="use-case-icon">📚</div>
+                    <h3 class="use-case-title">Research & Academia</h3>
+                    <p class="use-case-desc">
+                        Accelerate literature reviews and discover cross-disciplinary connections that inspire breakthrough research.
+                    </p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-icon">📊</div>
+                    <h3 class="use-case-title">Business Insights</h3>
+                    <p class="use-case-desc">
+                        Identify market trends, competitive intelligence, and strategic opportunities through intelligent analysis.
+                    </p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-icon">🎨</div>
+                    <h3 class="use-case-title">Creative Thinking</h3>
+                    <p class="use-case-desc">
+                        Unlock inspiration by exploring unexpected connections and novel combinations of ideas.
+                    </p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-icon">🎓</div>
+                    <h3 class="use-case-title">Learning Enhancement</h3>
+                    <p class="use-case-desc">
+                        Deepen understanding through contextual learning paths that adapt to your knowledge growth.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PHILOSOPHY ========== -->
+    <section class="section philosophy">
+        <div class="container">
+            <h2>What Others Say</h2>
+            <p style="text-align: center; color: #a8cef0; margin-bottom: 2rem;">
+                Real perspectives on the SeekLoom difference
+            </p>
+            <div class="philosophy-grid">
+                <div class="thought-card">
+                    <p class="thought-text">
+                        "SeekLoom doesn't just answer questions—it teaches me how to think about problems differently."
+                    </p>
+                    <p class="thought-author">Dr. Maria Chen, Research Scientist</p>
+                </div>
+                <div class="thought-card">
+                    <p class="thought-text">
+                        "Finally, a search engine that understands context. It's like having a brilliant collaborator in my corner."
+                    </p>
+                    <p class="thought-author">James Morrison, Entrepreneur</p>
+                </div>
+                <div class="thought-card">
+                    <p class="thought-text">
+                        "The way SeekLoom connects ideas across domains has transformed how I approach innovation."
+                    </p>
+                    <p class="thought-author">Sofia Rossi, Product Designer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CTA SECTION ========== -->
+    <section class="cta-section container">
+        <div class="cta-content">
+            <h2 class="cta-heading">Start Weaving Knowledge Today</h2>
+            <p style="color: #a8cef0; font-size: 1.1rem;">
+                Join thousands discovering a better way to learn, research, and innovate.
+            </p>
+            <button class="btn btn-primary cta-button">Launch SeekLoom</button>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Platform</h4>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">Security</a>
+                <a href="#">API Docs</a>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Guides</a>
+                <a href="#">Community</a>
+                <a href="#">Status</a>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Cookies</a>
+                <a href="#">Compliance</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-logo">SeekLoom</div>
+            <p class="footer-tagline">Seek. Connect. Understand.</p>
+            <p class="footer-copyright">
+                © 2026 SeekLoom. All rights reserved. | seekloom.space
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add scroll-triggered animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .use-case-card, .thought-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Interactive button effects
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
